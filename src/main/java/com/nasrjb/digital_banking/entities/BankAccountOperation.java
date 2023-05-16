@@ -18,6 +18,8 @@ public class BankAccountOperation {
     private Long id;
     private Date operationDate;
     private double amount;
+    private String description;
+
     @Enumerated(EnumType.STRING)
     private OperationType type;
     @ManyToOne
