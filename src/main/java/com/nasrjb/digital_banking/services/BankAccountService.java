@@ -1,9 +1,6 @@
 package com.nasrjb.digital_banking.services;
 
-import com.nasrjb.digital_banking.DTO.BankAccountDTO;
-import com.nasrjb.digital_banking.DTO.CurrentBankAccountDTO;
-import com.nasrjb.digital_banking.DTO.CustomerDTO;
-import com.nasrjb.digital_banking.DTO.SavingBankAccountDTO;
+import com.nasrjb.digital_banking.DTO.*;
 import com.nasrjb.digital_banking.exceptions.BalanceNotSufficientException;
 import com.nasrjb.digital_banking.exceptions.BankAccountNotFoundException;
 import com.nasrjb.digital_banking.exceptions.CustomerNotFoundException;
@@ -26,5 +23,7 @@ public interface BankAccountService {
     void transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, BalanceNotSufficientException;
     List<BankAccountDTO> bankAccountList();
     CustomerDTO getCustomer(Long customerId) throws CustomerNotFoundException;
+    List<AccountOperationDTO> accountHistory(String accountID);
 
-    }
+    AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountNotFoundException;
+}

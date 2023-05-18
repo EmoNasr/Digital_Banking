@@ -1,13 +1,14 @@
 package com.nasrjb.digital_banking.mappers;
 
-import com.nasrjb.digital_banking.DTO.CurrentBankAccountDTO;
-import com.nasrjb.digital_banking.DTO.CustomerDTO;
-import com.nasrjb.digital_banking.DTO.SavingBankAccountDTO;
+import com.nasrjb.digital_banking.DTO.*;
+import com.nasrjb.digital_banking.entities.BankAccountOperation;
 import com.nasrjb.digital_banking.entities.CurrentAccount;
 import com.nasrjb.digital_banking.entities.Customer;
 import com.nasrjb.digital_banking.entities.SavingAccount;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class BankAccountMapperImpl {
@@ -24,22 +25,37 @@ public class BankAccountMapperImpl {
     public SavingAccount fromSavingBankAccountDTO(SavingBankAccountDTO savingBankAccountDTO){
         SavingAccount savingAccount = new SavingAccount();
         BeanUtils.copyProperties(savingBankAccountDTO,savingAccount);
+        savingAccount.setCustomer(fromCustomerDTO(savingBankAccountDTO.getCustomerDTO()));
         return savingAccount;
     }
     public SavingBankAccountDTO fromSavingBankAccount(SavingAccount savingBankAccount){
         SavingBankAccountDTO savingBankAccountDTO=new SavingBankAccountDTO();
         BeanUtils.copyProperties(savingBankAccount,savingBankAccountDTO);
+        savingBankAccountDTO.setCustomerDTO(fromCustomer(savingBankAccount.getCustomer()));
+        savingBankAccountDTO.setType(savingBankAccount.getClass().getSimpleName());
         return savingBankAccountDTO;
     }
 
     public CurrentBankAccountDTO fromCurrentBankAccount(CurrentAccount currentAccount){
         CurrentBankAccountDTO currentBankAccountDTO=new CurrentBankAccountDTO();
         BeanUtils.copyProperties(currentAccount,currentBankAccountDTO);
+        currentBankAccountDTO.setCustomerDTO(fromCustomer(currentAccount.getCustomer()));
+        currentBankAccountDTO.setType(currentAccount.getClass().getSimpleName());
+
         return currentBankAccountDTO;
     }
     public CurrentAccount fromCurrentBankAccountDTO(CurrentBankAccountDTO currentBankAccountDTO){
         CurrentAccount currentAccount=new CurrentAccount();
         BeanUtils.copyProperties(currentBankAccountDTO,currentAccount);
+        currentAccount.setCustomer(fromCustomerDTO(currentBankAccountDTO.getCustomerDTO()));
         return currentAccount;
     }
+
+    public AccountOperationDTO fromAccountOperation(BankAccountOperation accountOperation){
+        AccountOperationDTO accountOperationDTO = new AccountOperationDTO();
+        BeanUtils.copyProperties(accountOperation,accountOperationDTO);
+        return accountOperationDTO;
+    }
+
+
 }

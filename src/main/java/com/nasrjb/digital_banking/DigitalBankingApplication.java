@@ -33,8 +33,7 @@ public class DigitalBankingApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DigitalBankingApplication.class, args);
 	}
-
-	@Bean
+@Bean
 	CommandLineRunner commandLineRunner(BankAccountService bankAccountService){
 
 		return args -> {
@@ -53,15 +52,15 @@ public class DigitalBankingApplication {
 							for(BankAccountDTO bankAccount:bankAccountDTOS ) {
 						for (int i = 0; i<10;i++){
 							try {
-								Long accountID ;
+								String accountID ;
 								if (bankAccount instanceof SavingBankAccountDTO){
 									accountID = ((SavingBankAccountDTO)bankAccount).getId();
 								}else{
 									accountID = ((CurrentBankAccountDTO)bankAccount).getId();
 								}
 								if (accountID != null) {
-									bankAccountService.credit(accountID.toString(), 10000 + Math.random() + 12000, "Credit");
-									bankAccountService.debit(accountID.toString(), 1000 + Math.random() + 1554, "Debit");
+									bankAccountService.credit(accountID, 10000 + Math.random() + 12000, "Credit");
+									bankAccountService.debit(accountID, 1000 + Math.random() + 1554, "Debit");
 								}
 							} catch (BankAccountNotFoundException | BalanceNotSufficientException e) {
 								throw new RuntimeException(e);
@@ -74,7 +73,6 @@ public class DigitalBankingApplication {
 			};
 		};
 	};
-
 
 	CommandLineRunner start
 	(CustomerRepository customerRepository,
