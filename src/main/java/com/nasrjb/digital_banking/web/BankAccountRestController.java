@@ -1,8 +1,8 @@
 package com.nasrjb.digital_banking.web;
 
-import com.nasrjb.digital_banking.DTO.AccountHistoryDTO;
-import com.nasrjb.digital_banking.DTO.AccountOperationDTO;
-import com.nasrjb.digital_banking.DTO.BankAccountDTO;
+import com.nasrjb.digital_banking.DTO.*;
+import com.nasrjb.digital_banking.dtos.CreditDTO;
+import com.nasrjb.digital_banking.exceptions.BalanceNotSufficientException;
 import com.nasrjb.digital_banking.exceptions.BankAccountNotFoundException;
 import com.nasrjb.digital_banking.services.BankAccountService;
 import lombok.AllArgsConstructor;
@@ -34,4 +34,25 @@ public class BankAccountRestController {
 
         return bankAccountService.getAccountHistory(accountId,page,size);
     }
+
+    @PostMapping("/accounts/debit")
+    public DebitDTO debitDTO(@RequestBody DebitDTO debitDTO) throws BankAccountNotFoundException, BalanceNotSufficientException {
+        this.bankAccountService.debit(debitDTO.getAccountID(),debitDTO.getAmount(),debitDTO.getDescription());
+        return debitDTO;
+    }
+    @PostMapping("/accounts/credit")
+    public CreditDTO creditDTO(@RequestBody CreditDTO creditDTO) throws BankAccountNotFoundException {
+        this.bankAccountService.credit(creditDTO.getAccountID(),creditDTO.getAmount(),creditDTO.getDescription());
+        return creditDTO;
+    }
+
+    @PostMapping("/accounts/transfer")
+    public void transferRequestDTO(@RequestBody TransferRequestDTO transferRequestDTO) throws BankAccountNotFoundException, BalanceNotSufficientException {
+        this.bankAccountService.transfer(
+                transferRequestDTO.getAccountSource(),
+                transferRequestDTO.getAccountDestination(),
+                transferRequestDTO.getAmount()
+        );
+    }
+
 }

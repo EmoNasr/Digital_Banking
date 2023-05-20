@@ -16,12 +16,19 @@ import com.nasrjb.digital_banking.exceptions.CustomerNotFoundException;
 import com.nasrjb.digital_banking.repositories.AccountOperationRepository;
 import com.nasrjb.digital_banking.repositories.BankAccountRepository;
 import com.nasrjb.digital_banking.repositories.CustomerRepository;
+import com.nasrjb.digital_banking.security.entities.AppRole;
+import com.nasrjb.digital_banking.security.entities.AppUser;
+import com.nasrjb.digital_banking.security.repositories.AppRoleRepository;
+import com.nasrjb.digital_banking.security.services.AccountService;
 import com.nasrjb.digital_banking.services.BankAccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -33,10 +40,27 @@ public class DigitalBankingApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DigitalBankingApplication.class, args);
 	}
+
+	@Bean
+	PasswordEncoder passwordEncoder(){
+		return new BCryptPasswordEncoder();
+	}
 @Bean
-	CommandLineRunner commandLineRunner(BankAccountService bankAccountService){
+	CommandLineRunner commandLineRunner(BankAccountService bankAccountService, AccountService accountService){
 
 		return args -> {
+
+			accountService.addNewRole(new AppRole(null,"CUSTOMER"));
+			accountService.addNewRole(new AppRole(null,"ADMIN"));
+
+			accountService.addNewUser(new AppUser(null,"Nasr","1234",new ArrayList<>()));
+			accountService.addNewUser(new AppUser(null,"Hamza","1234",new ArrayList<>()));
+			accountService.addNewUser(new AppUser(null,"Admin","1234",new ArrayList<>()));
+
+			accountService.addRoleToUser("Nasr","ADMIN");
+			accountService.addRoleToUser("Hamza","CUSTOMER");
+			accountService.addRoleToUser("Admin","ADMIN");
+
 			Stream.of("Nasr","Hajar","Omar").forEach(name->{
 				CustomerDTO customer = new CustomerDTO();
 				customer.setName(name);
