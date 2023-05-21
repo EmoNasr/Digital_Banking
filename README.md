@@ -2,12 +2,10 @@
 # **_DIGITAL BANKING_** 
 
 
-## **CLIENT-SIDE ARCHITECTURE**
+## **Architecture Web Rendu HTML Coté Client**
 
 ![Screenshot 2023-05-21 165751.png](images%2FScreenshot%202023-05-21%20165751.png)
 
-
-## **__Architecture Web Rendu Coté Client**__
 - Spring Coté backend
 - Angular coté frontend
 
