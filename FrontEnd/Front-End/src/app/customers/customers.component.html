@@ -27,7 +27,7 @@
           <td>{{c.id}}</td>
           <td>{{c.name}}</td>
           <td>{{c.email}}</td>
-          <td>
+          <td *ngIf="auth.hasRole('ADMIN')">
             <button class="btn btn-danger" (click)="handelDeleteCustomer(c)">
               <i class="bi bi-trash"></i>
             </button>

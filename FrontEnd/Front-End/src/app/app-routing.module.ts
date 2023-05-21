@@ -5,6 +5,8 @@ import {AccountsComponent} from "./accounts/accounts.component";
 import {NewCustomerComponent} from "./new-customer/new-customer.component";
 import {CustomerAccountComponent} from "./customer-account/customer-account.component";
 import {LoginComponent} from "./login/login.component";
+import {AdminTemplateComponent} from "./admin-template/admin-template.component";
+import {AuthentificationGuard} from "./guards/authentification.guard";
 
 const routes: Routes = [
   {
@@ -14,16 +16,20 @@ const routes: Routes = [
     path:"",component:LoginComponent
   },
   {
-    path:"customers",component:CustomersComponent
-  },
-  {
-    path:"accounts",component:AccountsComponent
-  },
-  {
-    path:"new_customer",component:NewCustomerComponent
-  },
-  {
-    path:"customer-account/:id",component:CustomerAccountComponent
+    path:"admin",component:AdminTemplateComponent, canActivate:[AuthentificationGuard],children:[
+      {
+        path:"customers",component:CustomersComponent
+      },
+      {
+        path:"accounts",component:AccountsComponent
+      },
+      {
+        path:"new_customer",component:NewCustomerComponent
+      },
+      {
+        path:"customer-account/:id",component:CustomerAccountComponent
+      },
+    ]
   },
 
 ];

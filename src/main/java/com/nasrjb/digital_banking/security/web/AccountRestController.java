@@ -2,6 +2,7 @@ package com.nasrjb.digital_banking.security.web;
 
 import com.nasrjb.digital_banking.security.entities.AppRole;
 import com.nasrjb.digital_banking.security.entities.AppUser;
+import com.nasrjb.digital_banking.security.entities.RoleUserForm;
 import com.nasrjb.digital_banking.security.services.AccountService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,13 +33,9 @@ public class AccountRestController {
     }
 
     @PostMapping("/addRoleToUser")
-    public void addRoleToUser(@RequestBody RoleUSerForm roleUSerForm){
-         accountService.addRoleToUser(roleUSerForm.getUsername(),roleUSerForm.getRoleName());
+    public void addRoleToUser(@RequestBody RoleUserForm roleUserForm){
+         accountService.addRoleToUser(roleUserForm.getUsername(),roleUserForm.getRoleName());
     }
 }
 
-@Data
-class RoleUSerForm{
-    private String username;
-    private String RoleName;
-}
+

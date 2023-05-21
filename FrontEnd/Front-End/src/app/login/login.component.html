@@ -4,6 +4,7 @@
       <div class="card-header">authentification</div>
 
     <div class="card-body">
+      {{userFormGroup.value|json}}
       <form [formGroup]="userFormGroup" (ngSubmit)="handelLogin()" >
         <div class="mb-3">
           <label class="form-label">Username: </label>

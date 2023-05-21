@@ -5,6 +5,7 @@ import {catchError, map, Observable, throwError} from "rxjs";
 import {Customer} from "../model/customer.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Router} from "@angular/router";
+import {AuthenticationService} from "../services/authentication.service";
 
 @Component({
   selector: 'app-customers',
@@ -17,7 +18,7 @@ export class CustomersComponent implements OnInit{
   errorMessage!:string;
   searchFormGroup!:FormGroup;
 
-  constructor(private customersService:CustomerService,private fb:FormBuilder,private route:Router) {
+  constructor(private customersService:CustomerService,private fb:FormBuilder,private route:Router,public auth:AuthenticationService) {
   }
 
   ngOnInit(): void {
@@ -66,7 +67,7 @@ export class CustomersComponent implements OnInit{
 
   handelCustomerAccount(c: Customer) {
 
-    this.route.navigateByUrl("/customer-account/"+c.id,{state:c});
+    this.route.navigateByUrl("/admin/customer-account/"+c.id,{state:c});
 
   }
 }
