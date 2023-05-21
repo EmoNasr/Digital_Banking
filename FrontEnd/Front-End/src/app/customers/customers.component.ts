@@ -66,8 +66,6 @@ export class CustomersComponent implements OnInit{
   }
 
   handelCustomerAccount(c: Customer) {
-
     this.route.navigateByUrl("/admin/customer-account/"+c.id,{state:c});
-
   }
 }
