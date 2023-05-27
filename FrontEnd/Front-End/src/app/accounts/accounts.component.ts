@@ -40,7 +40,7 @@ export class AccountsComponent implements OnInit{
       'Content-Type': 'application/json',
       'Authorization': "Bearer "+this.token})
 
-    this.handelSearchAccount();
+    //this.handelSearchAccount();
   }
 
   handelSearchAccount() {

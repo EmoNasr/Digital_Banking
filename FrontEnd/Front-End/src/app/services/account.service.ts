@@ -17,8 +17,8 @@ export class AccountService {
   public getAllAccounts(headers:any):Observable<AccountDetails>{
     return this.http.get<AccountDetails>(this.backend+"/accounts",{headers:headers});
   }
-  public getAccountDetails(name:string):Observable<any>{
-    return this.http.get<any>(this.backend+"/accountHistory/"+name);
+  public getAccountDetails(name:string,page:number,size:number):Observable<any>{
+    return this.http.get<any>(this.backend+"/accountHistory/"+name+"?page="+page+"&size="+size);
   }
 
   public debit( accountID:string,amount:number,description:string){

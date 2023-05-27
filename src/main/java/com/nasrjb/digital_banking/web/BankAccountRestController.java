@@ -47,6 +47,12 @@ public AccountHistoryDTO getAccountHistory(@PathVariable String name, @RequestPa
 
         return bankAccountService.getAccountHistory(accountId,page,size);
     }
+    @GetMapping("/accounts/pageOperations")
+    public List<AccountHistoryDTO> getAccount(@RequestParam(name = "page",defaultValue = "0") int page,
+                                              @RequestParam(name = "size",defaultValue = "5")int size) throws BankAccountNotFoundException {
+
+        return bankAccountService.getAccountsIds(page,size);
+    }
 
     @PostMapping("/accounts/debit")
     public DebitDTO debitDTO(@RequestBody DebitDTO debitDTO) throws BankAccountNotFoundException, BalanceNotSufficientException {

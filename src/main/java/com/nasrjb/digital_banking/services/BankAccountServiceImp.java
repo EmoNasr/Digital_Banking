@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -195,6 +196,19 @@ public class BankAccountServiceImp implements BankAccountService{
         return accountHistoryDTO;
     }
 
+
+    public List<AccountHistoryDTO> getAccountsIds( int page, int size){
+        Page<BankAccount> bankAccounts = bankAccountRepository.findAll(PageRequest.of(page,size));
+        List<AccountHistoryDTO> accountHistoryDTOS = new ArrayList<AccountHistoryDTO>();
+        bankAccounts.forEach(account->{
+            AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
+            accountHistoryDTO.setPageSize(size);
+            accountHistoryDTO.setBalance(account.getBalance());
+            accountHistoryDTO.setAccountId(account.getId());
+            accountHistoryDTOS.add(accountHistoryDTO);
+        });
+        return accountHistoryDTOS;
+    }
     @Override
     public AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountNotFoundException {
         BankAccount bankAccount = bankAccountRepository.findById(accountId).orElse(null);
