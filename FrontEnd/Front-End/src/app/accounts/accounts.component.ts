@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AccountService} from "../services/account.service";
 import {AccountDetails} from "../model/account.model";
 import {Observable} from "rxjs";
+import {HttpHeaders} from "@angular/common/http";
 
 @Component({
   selector: 'app-accounts',
@@ -16,6 +17,8 @@ export class AccountsComponent implements OnInit{
   pagesize:number=5;
   account$!:Observable<AccountDetails>;
   operationFormGroup!:FormGroup;
+  private token!: string | null ;
+  private headers_object!: HttpHeaders;
   constructor(private fb:FormBuilder,private accountService:AccountService) {
   }
   ngOnInit(): void {
@@ -32,12 +35,18 @@ export class AccountsComponent implements OnInit{
         accountDestination:this.fb.control(null)
       }
     )
+    this.token =  localStorage.getItem("access_token");
+    this.headers_object = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer "+this.token})
+
+    this.handelSearchAccount();
   }
 
   handelSearchAccount() {
     let accountId = this.accountFormGroup.value.accountId;
     console.log(accountId)
-    this.account$ = this.accountService.getAccount(accountId,this.currentPage,this.pagesize);
+    this.account$ = this.accountService.getAccount(accountId,this.currentPage,this.pagesize,this.headers_object);
     this.account$.subscribe(data=>{
     })
   }

@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Route, Router} from "@angular/router";
 import {Customer} from "../model/customer.model";
+import {AccountService} from "../services/account.service";
+import {HttpHeaders} from "@angular/common/http";
 
 @Component({
   selector: 'app-customer-account',
@@ -9,12 +11,51 @@ import {Customer} from "../model/customer.model";
 })
 export class CustomerAccountComponent implements OnInit{
   customerID!:string;
-  customer!:Customer;
-  constructor(private route:ActivatedRoute, private router:Router) {
-    this.customer=this.router.getCurrentNavigation()?.extras as Customer;
+  customer!:any;
+  accountDetails!:any;
+  private token!: string | null;
+  private headers_object!: HttpHeaders;
+
+  totalPage!:number;
+  account$: any;
+   currentPage!: number;
+  constructor(private route:ActivatedRoute, private router:Router,private accountService:AccountService) {
+    //data between componenent
+    this.customer=this.router.getCurrentNavigation()?.extras.state as Customer;
   }
   ngOnInit(): void {
-    this.customerID= this.route.snapshot.params["id"];
+    this.token =  localStorage.getItem("access_token");
+    this.headers_object = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer "+this.token})
+
+
+    console.log(this.customer)
+    this.accountService.getAccountDetails(this.customer.name).subscribe({
+      next:(data)=>{
+        this.accountDetails = data;
+        this.totalPage = data.length/8;
+        console.log(data);
+      },
+      error:err => {
+        console.log(err.message)
+      }
+      }
+    )
+  }
+  goto(page: number) {
+    this.currentPage = page;
+    this.accountService.getAccountDetails(this.customer.name).subscribe({
+        next:(data)=>{
+          this.accountDetails = data;
+          this.totalPage = data.length/8;
+          console.log(data);
+        },
+        error:err => {
+          console.log(err.message)
+        }
+      }
+    )
   }
 
 }

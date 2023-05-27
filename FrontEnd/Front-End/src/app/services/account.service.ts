@@ -7,11 +7,18 @@ import {AccountDetails} from "../model/account.model";
   providedIn: 'root'
 })
 export class AccountService {
-  backend:string="http://localhost:8081";
+  backend:string="http://localhost:8081/account";
   constructor(private http:HttpClient) { }
 
-  public getAccount(id:string,page:number,size:number):Observable<AccountDetails>{
-    return this.http.get<AccountDetails>(this.backend+"/accounts/"+id+"/pageOperations?page="+page+"&size="+size)
+  public getAccount(id:string,page:number,size:number,header:any):Observable<AccountDetails>{
+    return this.http.get<AccountDetails>(this.backend+"/accounts/"+id+"/pageOperations?page="+page+"&size="+size,{headers:header})
+  }
+
+  public getAllAccounts(headers:any):Observable<AccountDetails>{
+    return this.http.get<AccountDetails>(this.backend+"/accounts",{headers:headers});
+  }
+  public getAccountDetails(name:string):Observable<any>{
+    return this.http.get<any>(this.backend+"/accountHistory/"+name);
   }
 
   public debit( accountID:string,amount:number,description:string){

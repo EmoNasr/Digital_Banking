@@ -1,39 +1,44 @@
 import { Injectable } from '@angular/core';
 import {AppUser} from "../model/User-model";
 import {Observable, of, throwError} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  users:AppUser[]=[];
+  private  ENDPOINT = "http://localhost:8081/user";
+  Data:any;
   public authenticatedUser: AppUser|undefined;
-  constructor() {
-    this.users.push({userID:"id3",username:"user2",password:"password",role:["USER"]});
-    this.users.push({userID:"id2",username:"admin",password:"password",role:["USER","ADMIN"]});
+  constructor(private http:HttpClient) {
+
   }
 
-public login(username:string,password:string):Observable<AppUser>{
+public login(username:string,password:string):Observable<any>{
     //backend
-  let appUser = this.users.find(u=>u.username==username);
-if (!appUser)
-  return throwError(()=>new Error("User not found"));
-if(appUser.password!=password){
-  return throwError(()=>new Error("Bad Credentials"));
-}
-return of(appUser);
+
+  this.http.post("http://localhost:8081/user/login/login",{"username":username,"password":password}).subscribe({
+    next:(res)=>{
+      this.Data = res;
+    }
+  })
+
+return of(this.Data);
 }
 
 
 public authenticateUser(appUser:AppUser):Observable<boolean>{
     this.authenticatedUser = appUser;
-    localStorage.setItem("authUser",JSON.stringify({username:appUser.username,roles:appUser.role,jwt:"JWT_TOKEN"}));
+    localStorage.setItem("username",JSON.stringify({username:appUser.username}));
+    localStorage.setItem("access_token",JSON.stringify({jwt:appUser.token}));
+    localStorage.setItem("roles",JSON.stringify({roles:appUser.roles}));
     return of(true);
 }
 
 public hasRole(role:string):boolean{
-    return this.authenticatedUser!.role.includes(role);
+    console.log(this.authenticatedUser?.roles.includes("ADMIN"))
+    return this.authenticatedUser!.roles.includes(role);
 }
 public isAuthenticated(){
     return this.authenticatedUser!=undefined;
@@ -41,7 +46,7 @@ public isAuthenticated(){
 
 public logout():Observable<boolean>{
     this.authenticatedUser = undefined;
-    localStorage.removeItem("authUser")
+    localStorage.clear()
   return of(true);
 }
 }

@@ -11,5 +11,6 @@ import java.util.List;
 
 public interface AccountOperationRepository extends JpaRepository<BankAccountOperation,Long> {
      List<BankAccountOperation> findByAccount_Id(String accountId);
+     Page<BankAccountOperation> findByAccount_Customer_Name(String name,Pageable pageable);
      Page<BankAccountOperation> findByAccount_IdOrderByOperationDateDesc(String accounId, Pageable pageable);
 }

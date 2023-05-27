@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {CustomerService} from "../services/customer.service";
 import {catchError, map, Observable, throwError} from "rxjs";
 import {Customer} from "../model/customer.model";
@@ -18,6 +18,9 @@ export class CustomersComponent implements OnInit{
   errorMessage!:string;
   searchFormGroup!:FormGroup;
 
+  private token!:any;
+  private headers_object!:any;
+
   constructor(private customersService:CustomerService,private fb:FormBuilder,private route:Router,public auth:AuthenticationService) {
   }
 
@@ -27,12 +30,20 @@ export class CustomersComponent implements OnInit{
         keyword:this.fb.control("")
       }
     )
+
+    this.token =  localStorage.getItem("access_token");
+    this.headers_object = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer "+this.token})
+
+
    this.handleSearchCustomer();
   }
 
   handleSearchCustomer() {
-      let keyword = this.searchFormGroup?.value.keyword;
-      this.customers=this.customersService.searchCustomers(keyword)
+    let keyword = this.searchFormGroup?.value.keyword;
+
+    this.customers=this.customersService.searchCustomers(keyword,this.headers_object)
         .pipe(
           catchError(
             err => {
@@ -46,7 +57,7 @@ export class CustomersComponent implements OnInit{
   handelDeleteCustomer(c: Customer) {
     let conf = confirm("Are you sure");
     if (!conf) return ;
-    this.customersService.deleteCustomer(c.id).subscribe(
+    this.customersService.deleteCustomer(c.id,this.headers_object).subscribe(
       {
         next:(res)=>{
           this.customers=this.customers.pipe(
@@ -66,6 +77,6 @@ export class CustomersComponent implements OnInit{
   }
 
   handelCustomerAccount(c: Customer) {
-    this.route.navigateByUrl("/admin/customer-account/"+c.id,{state:c});
+    this.route.navigateByUrl("/admin/customer-account/"+c.name,{state:c});
   }
 }

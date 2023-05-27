@@ -186,9 +186,13 @@ public class BankAccountServiceImp implements BankAccountService{
         return bankAccountDTOMapper.fromCustomer(customer);
     }
 
-    public List<AccountOperationDTO> accountHistory(String accountID){
-            List<BankAccountOperation> accountOperation = accountOperationRepository.findByAccount_Id(accountID);
-            return accountOperation.stream().map(op->bankAccountDTOMapper.fromAccountOperation(op)).collect(Collectors.toList());
+    public AccountHistoryDTO accountHistory(String accountID, int page, int size){
+            Page<BankAccountOperation> accountOperation = accountOperationRepository.findByAccount_Customer_Name(accountID,PageRequest.of(page,size));
+        AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
+        accountHistoryDTO.setAccountOperationDTOs(accountOperation.stream().map(op->bankAccountDTOMapper.fromAccountOperation(op)).collect(Collectors.toList()));
+        accountHistoryDTO.setPageSize(size);
+        accountHistoryDTO.setTotalPages(accountOperation.getTotalPages());
+        return accountHistoryDTO;
     }
 
     @Override
@@ -200,6 +204,24 @@ public class BankAccountServiceImp implements BankAccountService{
         List<AccountOperationDTO> operationDTOS = accountOperations.getContent().stream().map(op -> bankAccountDTOMapper.fromAccountOperation(op)).collect(Collectors.toList());
         accountHistoryDTO.setAccountOperationDTOs(operationDTOS);
         accountHistoryDTO.setAccountId(accountId);
+        accountHistoryDTO.setBalance(bankAccount.getBalance());
+        accountHistoryDTO.setPageSize(size);
+        accountHistoryDTO.setTotalPages(accountOperations.getTotalPages());
+
+        return accountHistoryDTO;
+    }
+
+    @Override
+    public AccountHistoryDTO getAccountHistoryByCustomer(String customerName, int page, int size) throws BankAccountNotFoundException {
+        Customer customer = customerRepository.findByName(customerName);
+        BankAccount bankAccount = bankAccountRepository.findByCustomerId(customer.getId());
+        System.out.println(bankAccount.getBalance());
+        if (bankAccount == null) throw new BankAccountNotFoundException("Bank Not found");
+        Page<BankAccountOperation> accountOperations = accountOperationRepository.findByAccount_IdOrderByOperationDateDesc(bankAccount.getId(), PageRequest.of(page,size));
+        AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
+        List<AccountOperationDTO> operationDTOS = accountOperations.getContent().stream().map(op -> bankAccountDTOMapper.fromAccountOperation(op)).collect(Collectors.toList());
+        accountHistoryDTO.setAccountOperationDTOs(operationDTOS);
+        accountHistoryDTO.setAccountId(bankAccount.getId());
         accountHistoryDTO.setBalance(bankAccount.getBalance());
         accountHistoryDTO.setPageSize(size);
         accountHistoryDTO.setTotalPages(accountOperations.getTotalPages());

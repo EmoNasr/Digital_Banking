@@ -12,6 +12,7 @@ import { NewCustomerComponent } from './new-customer/new-customer.component';
 import { CustomerAccountComponent } from './customer-account/customer-account.component';
 import { LoginComponent } from './login/login.component';
 import { AdminTemplateComponent } from './admin-template/admin-template.component';
+import {NgxPaginationModule} from "ngx-pagination";
 
 @NgModule({
   declarations: [
@@ -28,7 +29,9 @@ import { AdminTemplateComponent } from './admin-template/admin-template.componen
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

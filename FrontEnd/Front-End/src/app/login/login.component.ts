@@ -11,6 +11,7 @@ import {AuthenticationService} from "../services/authentication.service";
 export class LoginComponent implements OnInit {
   userFormGroup!: FormGroup;
 
+  erreur !:string;
   constructor(private fb: FormBuilder, private router: Router, private auth: AuthenticationService) {
   }
 
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
     this.auth.login(username, password).subscribe(
       {
         next: (appUser) => {
+            console.log(appUser);
             this.auth.authenticateUser(appUser).subscribe(
               {
                 next:(data)=>{
@@ -42,6 +44,7 @@ export class LoginComponent implements OnInit {
             )
         },
         error: (err) => {
+          this.erreur = err.message;
           console.log(err.message)
         }
       });

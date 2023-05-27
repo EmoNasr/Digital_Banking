@@ -61,6 +61,7 @@ public class DigitalBankingApplication {
 			accountService.addNewUser(new AppUser(null,"Admin","1234",new ArrayList<>()));
 
 			accountService.addRoleToUser("Nasr","ADMIN");
+			accountService.addRoleToUser("Nasr","CUSTOMER");
 			accountService.addRoleToUser("Hamza","CUSTOMER");
 			accountService.addRoleToUser("Admin","ADMIN");
 

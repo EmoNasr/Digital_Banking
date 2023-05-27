@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 @CrossOrigin("*")
+@RequestMapping("/customer")
 public class CustomerRestController {
     private BankAccountService bankAccountService;
 

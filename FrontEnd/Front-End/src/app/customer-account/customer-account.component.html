@@ -1,3 +1,46 @@
-<div class="constainer">
-  {{customer | json}}
+<div class="container">
+  <div class="row">
+    <div class="col col-md-6 mt-5">
+      <div class="card">
+        <div class="card-header">
+          Accounts
+        </div>
+        <div class="card-body">
+
+          <ng-container *ngIf="accountDetails">
+            <div class="mb-3">
+              <label >Account ID : </label>
+              <label ><strong>{{customer.name}}</strong></label>
+            </div>
+            <div class="mb-3">
+              <label >Account Email : </label>
+              <label ><strong>{{customer.email}}</strong></label>
+            </div>
+
+            <table class="table">
+              <thead>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Amount</th>
+              </thead>
+              <tbody>
+              <tr *ngFor="let op of accountDetails.accountOperationDTOs ">
+                <td>{{op.id}}</td>
+                <td>{{op.operationDate|date:'dd-MM-yyyy'}}</td>
+                <td>{{op.type}}</td>
+                <td class="text-end">{{op.amount|number:'1.2-2'}}</td>
+              </tr>
+              </tbody>
+            </table>
+            <li *ngFor="let item of [].constructor(accountDetails.totalPages);let page=index">
+              <a [ngClass]="page==accountDetails.currentPage?'btn-info':'btn-outline-info'" class="btn ms-1 mt-1" (click)="goto(page)">{{page}}</a>
+            </li>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>

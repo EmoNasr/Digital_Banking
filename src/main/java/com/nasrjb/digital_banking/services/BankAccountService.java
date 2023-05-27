@@ -23,9 +23,10 @@ public interface BankAccountService {
     void transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, BalanceNotSufficientException;
     List<BankAccountDTO> bankAccountList();
     CustomerDTO getCustomer(Long customerId) throws CustomerNotFoundException;
-    List<AccountOperationDTO> accountHistory(String accountID);
+    AccountHistoryDTO accountHistory(String accountID, int page, int size);
 
     AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountNotFoundException;
+    AccountHistoryDTO getAccountHistoryByCustomer(String customerName, int page, int size) throws BankAccountNotFoundException;
 
     List<CustomerDTO> searchCustomers(String keyword);
 }
