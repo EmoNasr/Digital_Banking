@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AccountService} from "../services/account.service";
-import {AccountDetails} from "../model/account.model";
-import {Observable} from "rxjs";
+
 import {HttpHeaders} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {AuthenticationService} from "../services/authentication.service";
 
 @Component({
   selector: 'app-accounts',
@@ -13,13 +14,12 @@ import {HttpHeaders} from "@angular/common/http";
 export class AccountsComponent implements OnInit{
 
   accountFormGroup!:FormGroup;
-  currentPage:number=1;
+  currentPage:number=0;
   pagesize:number=5;
-  account$!:Observable<AccountDetails>;
+  account$!:Observable<any>;
   operationFormGroup!:FormGroup;
-  private token!: string | null ;
-  private headers_object!: HttpHeaders;
-  constructor(private fb:FormBuilder,private accountService:AccountService) {
+
+  constructor(public auth:AuthenticationService,private fb:FormBuilder,private accountService:AccountService) {
   }
   ngOnInit(): void {
     this.accountFormGroup=this.fb.group(
@@ -32,27 +32,32 @@ export class AccountsComponent implements OnInit{
         operationType : this.fb.control(null),
         amountOperation:this.fb.control(0),
         description:this.fb.control(null),
-        accountDestination:this.fb.control(null)
+        accountDestination:this.fb.control(null),
+        accountSource:this.fb.control(null)
       }
     )
-    this.token =  localStorage.getItem("access_token");
-    this.headers_object = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+this.token})
+
 
     //this.handelSearchAccount();
+    this.handelLoadingAccount();
   }
 
   handelSearchAccount() {
     let accountId = this.accountFormGroup.value.accountId;
-    console.log(accountId)
-    this.account$ = this.accountService.getAccount(accountId,this.currentPage,this.pagesize,this.headers_object);
+    this.account$ = this.accountService.getAccount(accountId,this.currentPage,this.pagesize);
     this.account$.subscribe(data=>{
     })
   }
 
+  handelLoadingAccount(){
+    this.account$=this.accountService.getAccountsId(this.currentPage,this.pagesize);
+   this.account$.subscribe(data=>{
+
+    });
+  }
+
   handelAccountOperations() {
-    let accountID:string=this.accountFormGroup.value.accountId;
+    let accountID:string=this.operationFormGroup.value.accountSource;
     let operationType = this.operationFormGroup.value.operationType;
 
     switch (operationType){
@@ -66,12 +71,12 @@ export class AccountsComponent implements OnInit{
                 alert("Success Debit");
                 this.operationFormGroup.reset();
 
-                this.handelSearchAccount();
+                this.handelLoadingAccount();
               },
               error:(err)=> {
-                console.log(err);
 
-                this.handelSearchAccount();
+
+                this.handelLoadingAccount();
               }
             }
           );
@@ -85,11 +90,11 @@ export class AccountsComponent implements OnInit{
               next:(date)=>{
                 alert("Success Credit");
                 this.operationFormGroup.reset();
-                this.handelSearchAccount();
+                this.handelLoadingAccount();
               },
               error:(err)=> {
-                console.log(err);
-                this.handelSearchAccount();
+
+                this.handelLoadingAccount();
               }
             });
         break;
@@ -104,11 +109,11 @@ export class AccountsComponent implements OnInit{
               next:(date)=>{
                 alert("Success Transfer");
                 this.operationFormGroup.reset();
-                this.handelSearchAccount();
+                this.handelLoadingAccount();
               },
               error:(err)=> {
-                console.log(err);
-                this.handelSearchAccount();
+
+                this.handelLoadingAccount();
               }
             });
         break;
@@ -120,7 +125,13 @@ export class AccountsComponent implements OnInit{
 
   goto(page: number) {
     this.currentPage=page;
-    this.handelSearchAccount();
+
+    if(this.accountFormGroup.value.accountId == ''){
+      this.handelLoadingAccount()
+    }else{
+
+      this.handelSearchAccount();
+    }
 
   }
 }

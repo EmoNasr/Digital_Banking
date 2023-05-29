@@ -121,6 +121,7 @@ public class BankAccountServiceImp implements BankAccountService{
 
     @Override
     public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, BalanceNotSufficientException {
+        System.out.println(accountId);
         BankAccount bankAccount = bankAccountRepository.findById(accountId)
                 .orElseThrow(()->new BankAccountNotFoundException("Bank account not found"));
         if (bankAccount.getBalance() < amount) {
@@ -202,7 +203,8 @@ public class BankAccountServiceImp implements BankAccountService{
         List<AccountHistoryDTO> accountHistoryDTOS = new ArrayList<AccountHistoryDTO>();
         bankAccounts.forEach(account->{
             AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
-            accountHistoryDTO.setPageSize(size);
+            accountHistoryDTO.setPageSize(bankAccounts.getSize());
+            accountHistoryDTO.setTotalPages(bankAccounts.getTotalPages());
             accountHistoryDTO.setBalance(account.getBalance());
             accountHistoryDTO.setAccountId(account.getId());
             accountHistoryDTOS.add(accountHistoryDTO);

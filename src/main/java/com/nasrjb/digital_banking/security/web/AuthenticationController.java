@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/user/login")
+@RequestMapping("/login")
 @CrossOrigin("*")
 public class AuthenticationController {
     private AccountService accountService;
@@ -22,7 +22,7 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
     private JwtService jwtService;
 
-    @PostMapping("/login")
+    @PostMapping
     public AuthenticationResponse login(@RequestBody AuthenticationRequest request){
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

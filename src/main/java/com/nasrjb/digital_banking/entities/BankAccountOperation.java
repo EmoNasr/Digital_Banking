@@ -22,6 +22,6 @@ public class BankAccountOperation {
 
     @Enumerated(EnumType.STRING)
     private OperationType type;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private BankAccount account;
 }

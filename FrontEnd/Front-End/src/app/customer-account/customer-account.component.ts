@@ -10,11 +10,8 @@ import {HttpHeaders} from "@angular/common/http";
   styleUrls: ['./customer-account.component.scss']
 })
 export class CustomerAccountComponent implements OnInit{
-  customerID!:string;
   customer!:any;
   accountDetails!:any;
-  private token!: string | null;
-  private headers_object!: HttpHeaders;
 
   totalPage!:number;
   account$: any;
@@ -24,10 +21,7 @@ export class CustomerAccountComponent implements OnInit{
     this.customer=this.router.getCurrentNavigation()?.extras.state as Customer;
   }
   ngOnInit(): void {
-    this.token =  localStorage.getItem("access_token");
-    this.headers_object = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+this.token})
+
 
 
     console.log(this.customer)

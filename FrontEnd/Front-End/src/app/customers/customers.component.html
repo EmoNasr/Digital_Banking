@@ -1,10 +1,10 @@
-<div class="container mt-2">
+<div class="container mt-2 d-flex justify-content-center">
 <ng-container *ngIf="customers|async;else failureOrLoading">
   <div class="card">
     <div class="card-header">
       Customers
     </div>
-    <div class="card-body">
+    <div class="card-body ">
       <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomer()">
         <div class="input-group">
           <label class="input-group-text">Keyword :</label>
@@ -32,7 +32,7 @@
               <i class="bi bi-trash"></i>
             </button>
           </td>
-          <td>
+          <td *ngIf="auth.hasRole('ADMIN')">
             <button (click)="handelCustomerAccount(c)" class="btn btn-success">
               accounts
             </button>

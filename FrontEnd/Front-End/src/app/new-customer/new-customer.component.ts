@@ -12,8 +12,7 @@ import {HttpHeaders} from "@angular/common/http";
 })
 export class NewCustomerComponent implements OnInit{
   newCustomerFromGroup!:FormGroup;
-  private token!: string | null;
-  private headers_object!: HttpHeaders;
+
 
   constructor(private fb:FormBuilder,private customerService:CustomerService,private route:Router) {
   }
@@ -25,17 +24,14 @@ export class NewCustomerComponent implements OnInit{
         email:this.fb.control(null,[Validators.required,Validators.email])
       }
     )
-    this.token =  localStorage.getItem("access_token");
-    this.headers_object = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+this.token})
+
   }
 
 
   handelSaveCustomer() {
     let customer:Customer = this.newCustomerFromGroup.value;
     console.log(customer);
-    this.customerService.saveCustomer(customer,this.headers_object).subscribe(
+    this.customerService.saveCustomer(customer).subscribe(
       {
         next:data=>{
           alert("Customer has been add succeddfully");

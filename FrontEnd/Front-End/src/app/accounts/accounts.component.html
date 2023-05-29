@@ -6,43 +6,43 @@
           Accounts
         </div>
         <div class="card-body">
-          <form [formGroup]="accountFormGroup" (ngSubmit)="handelSearchAccount()">
-            <div class="input-group">
-              <label class="input-group-text">Account ID :</label>
-              <input type="text" formControlName="accountId" class="form-control">
-              <button class="btn btn-info">
-                <i class="bi bi-search"></i>
-                Search
-              </button>
-            </div>
-          </form>
+<!--          <form [formGroup]="accountFormGroup" (ngSubmit)="handelSearchAccount()">-->
+<!--            <div class="input-group">-->
+<!--              <label class="input-group-text">Account ID :</label>-->
+<!--              <input type="text" formControlName="accountId" class="form-control">-->
+<!--              <button class="btn btn-info">-->
+<!--                <i class="bi bi-search"></i>-->
+<!--                Search-->
+<!--              </button>-->
+<!--            </div>-->
+<!--          </form>-->
           <ng-container *ngIf="account$|async as accountDetails">
-            <div class="mb-3">
-              <label >Account ID : </label>
-              <label ><strong>{{accountDetails.accountId}}</strong></label>
-            </div>
-            <div class="mb-3">
-              <label >Balance : </label>
-              <label ><strong>{{accountDetails.balance|number:'1.2-2'}}</strong></label>
-            </div>
+<!--            <div class="mb-3">-->
+<!--              <label >Account ID : </label>-->
+<!--              <label ><strong>{{accountDetails[0].accountId}}</strong></label>-->
+<!--            </div>-->
+<!--            <div class="mb-3">-->
+<!--              <label >Balance : </label>-->
+<!--              <label ><strong>{{accountDetails[0].balance|number:'1.2-2'}}</strong></label>-->
+<!--            </div>-->
             <table class="table">
               <thead>
               <th>ID</th>
-              <th>Date</th>
-              <th>Type</th>
+<!--              <th>Date</th>-->
+<!--              <th>Type</th>-->
               <th>Amount</th>
               </thead>
               <tbody>
-              <tr *ngFor="let op of accountDetails.accountOperationDTOs">
-                <td>{{op.id}}</td>
-                <td>{{op.operationDate|date:'dd-MM-yyyy'}}</td>
-                <td>{{op.type}}</td>
-                <td class="text-end">{{op.amount|number:'1.2-2'}}</td>
+              <tr *ngFor="let op of accountDetails">
+                <td>{{op.accountId}}</td>
+<!--                <td>{{op.operationDate|date:'dd-MM-yyyy'}}</td>-->
+<!--                <td>{{op.type}}</td>-->
+                <td class="text-end">{{op.balance|number:'1.2-2'}}</td>
               </tr>
               </tbody>
             </table>
             <ul class="nav nav-pills" >
-              <li *ngFor="let item of [].constructor(accountDetails.totalPages);let page=index">
+              <li *ngFor="let item of [].constructor(accountDetails[0].totalPages);let page=index">
                 <a [ngClass]="page==currentPage?'btn-info':'btn-outline-info'" class="btn ms-1 mt-1" (click)="goto(page)">{{page}}</a>
               </li>
             </ul>
@@ -61,7 +61,7 @@
                 <label class="form-check-label">Debit  </label>
                 <input class="form-check-input" type="radio" formControlName="operationType" value="DEBIT" >
               </div>
-              <div class="form-check form-check-inline">
+              <div class="form-check form-check-inline" *ngIf="auth.hasRole('ADMIN')">
                 <label class="form-check-label">Credit  </label>
                 <input class="form-check-input" type="radio" formControlName="operationType" value="CREDIT">
               </div>
@@ -74,6 +74,10 @@
                 <input  type="text" formControlName="accountDestination" class="form-control">
               </div>
               <div class="mb-3">
+                <label class="form-check-label">Source  </label>
+                <input  type="text" formControlName="accountSource" class="form-control">
+              </div>
+              <div class="mb-3">
                 <label class="form-check-label">Amount  </label>
                 <input  type="text" formControlName="amountOperation" class="form-control">
               </div>
@@ -81,6 +85,7 @@
                 <label class="form-check-label">Description  </label>
                 <input  type="text" formControlName="description" class="form-control">
             </div>
+
               <div class="d-grid mb-3">
                 <button class="btn btn-success">Save Operation</button>
               </div>

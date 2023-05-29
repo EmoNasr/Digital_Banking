@@ -18,8 +18,7 @@ export class CustomersComponent implements OnInit{
   errorMessage!:string;
   searchFormGroup!:FormGroup;
 
-  private token!:any;
-  private headers_object!:any;
+
 
   constructor(private customersService:CustomerService,private fb:FormBuilder,private route:Router,public auth:AuthenticationService) {
   }
@@ -31,19 +30,16 @@ export class CustomersComponent implements OnInit{
       }
     )
 
-    this.token =  localStorage.getItem("access_token");
-    this.headers_object = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+this.token})
 
 
-   this.handleSearchCustomer();
+
+   this.handleSearchCustomer()
   }
 
   handleSearchCustomer() {
     let keyword = this.searchFormGroup?.value.keyword;
 
-    this.customers=this.customersService.searchCustomers(keyword,this.headers_object)
+    this.customers=this.customersService.searchCustomers(keyword)
         .pipe(
           catchError(
             err => {
@@ -57,7 +53,7 @@ export class CustomersComponent implements OnInit{
   handelDeleteCustomer(c: Customer) {
     let conf = confirm("Are you sure");
     if (!conf) return ;
-    this.customersService.deleteCustomer(c.id,this.headers_object).subscribe(
+    this.customersService.deleteCustomer(c.id).subscribe(
       {
         next:(res)=>{
           this.customers=this.customers.pipe(

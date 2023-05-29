@@ -17,7 +17,6 @@ import java.util.Objects;
 @RestController
 @AllArgsConstructor
 @CrossOrigin("*")
-@RequestMapping("/account")
 public class BankAccountRestController {
     private BankAccountService bankAccountService;
 
